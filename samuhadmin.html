@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dhan-Varsha Bachat Samuh</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Dhan-Varsha Bachat Samuh – Secure Savings & Easy Loans">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="DVS Admin">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b2d5c">
+
+
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body {
+      margin: 0;
+      background: #f5f7fb;
+      color: #222;
+    }
+    header {
+      background: #0b2559;
+      color: #fff;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    header img.logo {
+      height: 60px;
+      width: 60px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: #fff;
+    }
+    header .title-block {
+      flex: 1;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      color: #ffc107; 
+      text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+    }
+    header p {
+      margin: 2px 0 0;
+      font-size: 11px;
+      opacity: 0.95;
+      line-height: 1.3;
+    }
+    header .slogan {
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        color: #ffc107; 
+        text-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
+        margin-bottom: 4px;
+    }
+
+    main {
+      padding: 12px;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-bottom: 60px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .summary-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      font-size: 13px;
+      border-left: 4px solid #0b2559;
+    }
+    .summary-card h3 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      text-transform: uppercase;
+    }
+    .summary-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0b2559;
+    }
+
+    .tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+    .tab-buttons button {
+      flex: 1;
+      min-width: 110px;
+      border-radius: 6px;
+      border: 1px solid #0b2559;
+      background: #fff;
+      color: #0b2559;
+      padding: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .tab-buttons button.active {
+      background: #0b2559;
+      color: #fff;
+      box-shadow: 0 2px 5px rgba(11, 37, 89, 0.3);
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 14px;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #0b2559;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+    }
+    .card small {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 700;
+      display: block;
+      margin-bottom: 4px;
+      color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    input[type="datetime-local"],
+    input[type="tel"],
+    input[type="email"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1px solid #ccd2e0;
+      background: #fcfcfc;
+    }
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: #0b2559;
+        background: #fff;
+    }
+    
+    input[type="file"] {
+      font-size: 12px;
+      padding: 6px 0;
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    .inline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    
+    .section-title {
+        grid-column: 1 / -1;
+        background: #eef1f8;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-weight: bold;
+        color: #0b2559;
+        margin-top: 5px;
+    }
+
+    .btn {
+      border-radius: 6px;
+      border: none;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .btn-primary {
+      background: #0b2559;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #e5e9f5;
+      color: #0b2559;
+      width: auto;
+      padding: 8px 16px;
+      text-transform: none;
+    }
+    .btn-danger {
+      background: #ffe5e5;
+      color: #a22626;
+      width: auto;
+      padding: 8px 16px;
+      text-transform: none;
+    }
+
+    .section-hidden {
+      display: none;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+
+    .table-wrapper {
+      max-height: 400px;
+      overflow: auto;
+      border-radius: 8px;
+      border: 1px solid #e0e4f0;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #eef1f8;
+      text-align: left;
+    }
+    th {
+      position: sticky;
+      top: 0;
+      background: #f0f3ff;
+      color: #0b2559;
+      font-weight: 700;
+      z-index: 1;
+    }
+    tr:nth-child(even) {
+        background: #f9faff;
+    }
+
+    .status-pill {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      display: inline-block;
+      font-weight: 600;
+    }
+    .status-active {
+      background: #e5f7e8;
+      color: #1b7a32;
+    }
+    .status-inactive {
+      background: #ffeaea;
+      color: #aa1d1d;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      padding: 20px 10px;
+      color: #666;
+      background: #eef1f8;
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
+    }
+    
+    .backup-container {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        background: #fff8e1;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #ffe082;
+    }
+    
+    
+    .backup-fixed {
+  display: block !important;
+}
+
+/* ===== Actions column style ===== */
+.action-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.btn-action {
+  border: none;
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* SHOW */
+.btn-show {
+  background: #f2f2f2;
+  color: #000;
+}
+
+/* EDIT */
+.btn-edit {
+  background: #e8f0ff;
+  color: #0b3d91;
+}
+
+/* ACTIVATE */
+.btn-toggle.activate {
+  background: #e6f9ed;
+  color: #1e7e34;
+}
+
+/* DEACTIVATE */
+.btn-toggle.deactivate {
+  background: #fdeaea;
+  color: #b02a37;
+}
+
+
+  </style>
+</head>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('SW registered', reg))
+      .catch(err => console.error('SW failed', err));
+  });
+}
+</script>
+<body>
+<header>
+  <img src="https://i.ibb.co/8nbPMBrq/Chat-GPT-Image-8-2025-03-31-35-pm.png" alt="Logo" class="logo">
+  <div class="title-block">
+    <h1>Dhan-Varsha Bachat Samuh</h1>
+    <p class="slogan"> Secure Savings • Easy Loans</p>
+    <p>
+       Owner: Archana Devi (📞 7764970580) <br>
+       Manager: Ravi Kishan (📞 7808215820)
+    </p>
+  </div>
+</header>
+
+<main>
+  <section class="summary-grid">
+    <div class="summary-card">
+      <h3>👥 Total Members</h3>
+      <div class="summary-value" id="sumTotalMembers">0</div>
+    </div>
+    <div class="summary-card">
+      <h3>📥 Depositing Members</h3>
+      <div class="summary-value" id="sumDepositMembers">0</div>
+    </div>
+    <div class="summary-card">
+      <h3>🤝 Loan Taking Members</h3>
+      <div class="summary-value" id="sumLoanMembers">0</div>
+    </div>
+    <div class="summary-card">
+      <h3>💰 Total Deposit Amount</h3>
+      <div class="summary-value" id="sumTotalDeposit">₹ 0</div>
+    </div>
+    <div class="summary-card">
+      <h3>📉 Total Loan Amount</h3>
+      <div class="summary-value" id="sumTotalLoan">₹ 0</div>
+    </div>
+    <div class="summary-card">
+      <h3>🏦 Remaining Balance</h3>
+      <div class="summary-value" id="sumBalance">₹ 0</div>
+    </div>
+  </section>
+
+  <section class="card backup-fixed" id="backupSection">
+  <h2>🛡️ Backup & Restore</h2>
+  <div class="backup-container">
+    <small><strong>Note:</strong> Backup your data regularly to keep it safe.</small>
+    <small id="autoBackupInfo">Last Auto Backup: Not available</small>
+
+    <div class="inline" style="justify-content: space-between;">
+      <button class="btn btn-secondary" onclick="exportBackup()">
+        💾 Create Backup (.json)
+      </button>
+
+      <div style="display:flex; align-items:center; gap:5px;">
+        <label style="margin:0; font-size:11px;">♻️ Restore:</label>
+        <input type="file" id="importFile" accept=".json" onchange="importBackup(this)">
+      </div>
+    </div>
+
+    <!-- ✅ AUTO BACKUP RESTORE BUTTON -->
+    <button class="btn btn-secondary" onclick="restoreAutoBackup()">
+      🔄 Restore Last Auto Backup
+    </button>
+
+  </div>
+</section>
+
+
+  <div class="tab-buttons">
+    <button id="tabAddMember" class="active" onclick="showSection('sectionAddMember')">➕ Add Member</button>
+    <button id="tabApplyLoan" onclick="showSection('sectionApplyLoan')">📝 Apply Loan</button>
+    <button id="tabAddDeposit" onclick="showSection('sectionAddDeposit')">💵 Add Deposit</button>
+    <button id="tabMembersList" onclick="showSection('sectionMembersList')">👥 All Members</button>
+    <button id="tabActivity" onclick="showSection('sectionActivity')">📜 Activity / History</button>
+  </div>
+
+  <section id="sectionAddMember" class="card">
+    <h2>➕ Add New Member</h2>
+    <small>All fields are required. A unique ID will be auto-generated.</small>
+
+    <form id="formAddMember">
+      
+      <input type="hidden" id="editMemberId">
+
+      <div class="section-title">👤 Personal Details</div>
+      <div class="two-col">
+        <div>
+          <label>Full Name *</label>
+          <input type="text" id="mName" required placeholder="Enter Full Name">
+        </div>
+        <div>
+          <label>Mobile Number *</label>
+          <input type="tel" id="mMobile" required placeholder="10 digit mobile">
+        </div>
+      </div>
+      <div>
+        <label>🏠 Full Address *</label>
+        <textarea id="mAddress" required placeholder="Enter complete address"></textarea>
+      </div>
+
+      <div class="section-title">🏦 Bank Details</div>
+      <div class="two-col">
+        <div>
+          <label>Bank Name *</label>
+          <input type="text" id="mBankName" required placeholder="e.g. SBI, HDFC">
+        </div>
+        <div>
+          <label>Account Number *</label>
+          <input type="text" id="mAccountNo" required placeholder="Account No">
+        </div>
+      </div>
+      <div class="two-col">
+        <div>
+          <label>IFSC Code *</label>
+          <input type="text" id="mIFSC" required placeholder="IFSC Code">
+        </div>
+        <div>
+          <label>📸 Bank Passbook Image *</label>
+          <input type="file" id="mBankImg" accept="image/*" required>
+        </div>
+      </div>
+
+      <div class="section-title">🆔 Identity Documents</div>
+      <div class="two-col">
+        <div>
+          <label>Aadhaar Number *</label>
+          <input type="text" id="mAadhaarNo" required>
+        </div>
+        <div>
+           <label>PAN Number *</label>
+           <input type="text" id="mPanNo" required>
+        </div>
+      </div>
+      <div class="two-col">
+         <div>
+            <label>📸 Aadhaar Front Image *</label>
+            <input type="file" id="mAadhaarFront" accept="image/*" required>
+         </div>
+         <div>
+            <label>📸 Aadhaar Back Image *</label>
+            <input type="file" id="mAadhaarBack" accept="image/*" required>
+         </div>
+      </div>
+      <div class="two-col">
+         <div>
+            <label>📸 PAN Card Image *</label>
+            <input type="file" id="mPanImg" accept="image/*" required>
+         </div>
+         <div>
+            <label>Ration Card No (Optional)</label>
+            <input type="text" id="mRationNo">
+         </div>
+      </div>
+      <div>
+         <label>📸 Ration Card Image (Optional)</label>
+         <input type="file" id="mRationImg" accept="image/*">
+      </div>
+
+      <div class="section-title">🧑‍💼 Customer Media</div>
+      <div class="two-col">
+        <div>
+          <label>📸 Customer Photo *</label>
+          <input type="file" id="mCustomerPhoto" accept="image/*" required>
+        </div>
+        <div>
+          <label>✍️ Signature Image *</label>
+          <input type="file" id="mSignature" accept="image/*" required>
+        </div>
+      </div>
+
+      <div class="section-title">⚙️ Account Type (Select at least one)</div>
+      <div class="inline">
+        <label class="inline">
+          <input type="checkbox" id="chkDeposit"> 📥 Deposit Account
+        </label>
+        <label class="inline">
+          <input type="checkbox" id="chkLoan"> 💸 Loan Account
+        </label>
+      </div>
+
+      <div id="initialLoanFields" class="section-hidden" style="background:#fff8e1; padding:10px; border-radius:6px; border:1px solid #ffe082;">
+        <div class="section-title" style="background:transparent; padding-left:0; margin-top:0;">📝 Initial Loan Details</div>
+        <div class="two-col">
+          <div>
+            <label>Loan Amount *</label>
+            <input type="number" id="mInitLoanAmt" min="0">
+          </div>
+          <div>
+            <label>Repayment Date *</label>
+            <input type="date" id="mInitLoanDate">
+          </div>
+        </div>
+        <div>
+          <label>Reason for Loan *</label>
+          <textarea id="mInitLoanReason"></textarea>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="btnSaveMember">
+  Save New Member
+</button>
+    </form>
+  </section>
+
+  <section id="sectionApplyLoan" class="card section-hidden">
+    <h2>📝 Apply for Loan</h2>
+    
+    <form id="formApplyLoan">
+      <div>
+        <label>🔍 Select Member (Search ID or Name) *</label>
+        <input type="text" id="searchLoanMember" placeholder="Type name or ID to filter..." oninput="filterMembers('searchLoanMember','selLoanMember')">
+        <select id="selLoanMember" required style="margin-top:5px;">
+  <option value="">Select Member...</option>
+</select>
+      </div>
+
+      <div class="two-col">
+        <div>
+          <label>💰 Loan Amount *</label>
+          <input type="number" id="loanAmt" required min="1">
+        </div>
+        <div>
+          <label>📅 Repayment Date *</label>
+          <input type="date" id="loanDate" required>
+        </div>
+      </div>
+
+      <div>
+        <label>❓ Reason for Loan *</label>
+        <textarea id="loanReason" required></textarea>
+      </div>
+
+      <div>
+        <label>✍️ Customer Signature Image (For Confirmation) *</label>
+        <input type="file" id="loanSig" accept="image/*" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit Loan Application</button>
+    </form>
+  </section>
+
+  <section id="sectionAddDeposit" class="card section-hidden">
+    <h2>💰 Add Deposit / Repayment</h2>
+    
+    <form id="formAddDeposit">
+      <div>
+        <label>🔍 Select Member (Search ID or Name) *</label>
+        <input type="text" id="searchDepMember" placeholder="Type name or ID to filter..." oninput="filterMembers('searchDepMember','selDepMember')">
+        <select id="selDepMember" required style="margin-top:5px;">
+  <option value="">Select Member...</option>
+</select>
+      </div>
+
+      <div>
+        <label>Deposit Type *</label>
+        <div class="inline">
+          <label class="inline"><input type="radio" name="depType" value="saving" checked onchange="toggleDepType()"> 📥 Saving Deposit</label>
+          <label class="inline"><input type="radio" name="depType" value="repay" onchange="toggleDepType()"> 🔙 Loan Repayment</label>
+        </div>
+        <small id="repayNote" class="section-hidden" style="color:#d32f2f; margin-top:5px;">⚠️ Note: This will deduct from Loan Balance and Add to Total Deposit stats.</small>
+      </div>
+
+      <div>
+        <label>Amount (₹) *</label>
+        <input type="number" id="depAmount" required min="1">
+      </div>
+
+      <div>
+        <label>Payment Method *</label>
+        <select id="depMethod" onchange="toggleOnlineProof()">
+          <option value="Offline">💵 Offline (Cash)</option>
+          <option value="Online">📱 Online (UPI / Bank)</option>
+        </select>
+      </div>
+
+      <div id="onlineProofDiv" class="section-hidden">
+        <label>🧾 Payment Receipt / Screenshot *</label>
+        <input type="file" id="depReceipt" accept="image/*">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Save Transaction</button>
+    </form>
+  </section>
+
+  <section id="sectionMembersList" class="card section-hidden">
+    <h2>👥 All Members</h2>
+    <div style="margin-bottom:10px;">
+        <input type="text" id="listSearch" placeholder="?? Search by Name or ID..." oninput="renderMembersTable()">
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Status</th>
+            <th>Savings (₹)</th>
+            <th>Loan Due (₹)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableMembersBody">
+          </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="sectionActivity" class="card section-hidden">
+    <h2>📜 Activity History</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Action</th>
+            <th>Details</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody id="tableActivityBody">
+          </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>© Dhan-Varsha Bachat Samuh</p>
+    <p>📧 Official Support Email: <a href="mailto:dvs.helpdesk.official@gmail.com">dvs.helpdesk.official@gmail.com</a></p>
+  </footer>
+</main>
+
+<script>
+  // --- STATE & CONSTANTS ---
+  const STORAGE_KEY = 'dvs_app_data_v3';
+  
+  
+  let appState = {
+    members: [],
+    activities: []
+  };
+
+  // --- INITIALIZATION ---
+  document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  updateDashboard();
+  updateAutoBackupInfo(); // ✅ YE LINE ADD KI
+    
+    // Checkbox Listener for Add Member
+    document.getElementById('chkLoan').addEventListener('change', function() {
+      const el = document.getElementById('initialLoanFields');
+      const inputs = el.querySelectorAll('input, textarea');
+      if(this.checked) {
+        el.classList.remove('section-hidden');
+        inputs.forEach(i => i.setAttribute('required', 'true'));
+      } else {
+        el.classList.add('section-hidden');
+        inputs.forEach(i => i.removeAttribute('required'));
+        inputs.forEach(i => i.value = '');
+      }
+    });
+  });
+
+  // --- CORE FUNCTIONS ---
+  function loadData() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      try {
+        appState = JSON.parse(raw);
+        if(!appState.members) appState.members = [];
+        if(!appState.activities) appState.activities = [];
+      } catch(e) { console.error("Data load error", e); }
+    }
+  }
+
+ function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+  autoBackupSnapshot();        // ✅ AUTO BACKUP
+  updateAutoBackupInfo();      // 🆕 SHOW TIME
+  updateDashboard();
+}
+
+  function generateID() {
+    return 'DVS-' + Math.floor(1000 + Math.random() * 9000) + '-' + Date.now().toString().slice(-4);
+  }
+
+  function formatCurrency(num) {
+    return '₹ ' + (Number(num)||0).toLocaleString('en-IN');
+  }
+
+  function logActivity(type, msg, amt = 0) {
+    appState.activities.unshift({
+      date: new Date().toLocaleString('en-IN'),
+      type: type,
+      details: msg,
+      amount: amt ? formatCurrency(amt) : '-'
+    });
+    saveData();
+    renderActivityTable();
+  }
+
+  // --- DASHBOARD ---
+  function updateDashboard() {
+    const members = appState.members;
+    
+    // 1. Total Members
+    const totalMem = members.length;
+    
+    // 2. Depositing Members (Is Deposit Account type)
+    const depMem = members.filter(m => m.accountTypes.includes('Deposit')).length;
+    
+    // 3. Loan Members (Is Loan Account type)
+    const loanMem = members.filter(m => m.accountTypes.includes('Loan')).length;
+
+    // 4. Total Deposit Amount (Sum of Savings Balance + Repaid Amounts)
+    // Note: Prompt says Repayment adds to Total Deposited Amount.
+    // We calculate this by summing everyone's 'savingsBalance' AND their 'totalRepaid' logic if separated.
+    // Implementation: We will sum the `savingsBalance` and `repaidHistory`.
+    const totalSavings = members.reduce((sum, m) => sum + (m.savingsBalance || 0), 0);
+    const totalRepaid = members.reduce((sum, m) => sum + (m.repaidAmount || 0), 0);
+    
+    // If prompt means "Total Money In", it is Savings + Repaid.
+    // However, Dashboard 6 says Balance = Deposit - Loan. 
+    // If we use strictly Member Savings for "Total Deposit", the math works for Liabilities.
+    // Based on Prompt "Add to Total Deposited Amount" for repayment:
+    const totalDepositDisplay = totalSavings + totalRepaid;
+
+    // 5. Total Loan Amount (Outstanding)
+    const totalLoanOutstanding = members.reduce((sum, m) => sum + (m.loanBalance || 0), 0);
+
+    // 6. Remaining Balance
+    const balance = totalDepositDisplay - totalLoanOutstanding;
+
+    document.getElementById('sumTotalMembers').textContent = totalMem;
+    document.getElementById('sumDepositMembers').textContent = depMem;
+    document.getElementById('sumLoanMembers').textContent = loanMem;
+    document.getElementById('sumTotalDeposit').textContent = formatCurrency(totalDepositDisplay);
+    document.getElementById('sumTotalLoan').textContent = formatCurrency(totalLoanOutstanding);
+    document.getElementById('sumBalance').textContent = formatCurrency(balance);
+  }
+
+  // --- UTILS ---
+  async function getBase64(fileId) {
+    const input = document.getElementById(fileId);
+    if (input.files && input.files[0]) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => resolve(e.target.result);
+        reader.readAsDataURL(input.files[0]);
+      });
+    }
+    return null;
+  }
+
+  function showSection(id) {
+    document.querySelectorAll('main > section').forEach(s => {
+      if(!s.classList.contains('summary-grid')) s.classList.add('section-hidden');
+    });
+    document.getElementById(id).classList.remove('section-hidden');
+    
+    document.querySelectorAll('.tab-buttons button').forEach(b => b.classList.remove('active'));
+    
+    // Find button that calls this section
+    const btn = Array.from(document.querySelectorAll('.tab-buttons button')).find(b => b.getAttribute('onclick').includes(id));
+    if(btn) btn.classList.add('active');
+
+    if(id === 'sectionApplyLoan') populateSelect('selLoanMember');
+    if(id === 'sectionAddDeposit') populateSelect('selDepMember');
+    if(id === 'sectionMembersList') renderMembersTable();
+    if(id === 'sectionActivity') renderActivityTable();
+  }
+
+  // --- ACTIONS ---
+
+  // 1. ADD MEMBER
+  
+  document.getElementById('formAddMember').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // ===== EDIT MEMBER MODE =====
+const editId = document.getElementById('editMemberId').value;
+if (editId) {
+  const m = appState.members.find(x => x.id === editId);
+  if (!m) {
+    alert("Member not found");
+    return;
+  }
+
+  // Update text fields
+  m.name = document.getElementById('mName').value;
+  m.mobile = document.getElementById('mMobile').value;
+  m.address = document.getElementById('mAddress').value;
+
+  m.bank.name = document.getElementById('mBankName').value;
+  m.bank.acc = document.getElementById('mAccountNo').value;
+  m.bank.ifsc = document.getElementById('mIFSC').value;
+
+  m.docs.aadhaar = document.getElementById('mAadhaarNo').value;
+  m.docs.pan = document.getElementById('mPanNo').value;
+  m.docs.ration = document.getElementById('mRationNo').value;
+
+  // Update images only if new file selected
+  if (document.getElementById('mBankImg').files[0])
+    m.bank.img = await getBase64('mBankImg');
+
+  if (document.getElementById('mAadhaarFront').files[0])
+    m.docs.aadhaarFront = await getBase64('mAadhaarFront');
+
+  if (document.getElementById('mAadhaarBack').files[0])
+    m.docs.aadhaarBack = await getBase64('mAadhaarBack');
+
+  if (document.getElementById('mPanImg').files[0])
+    m.docs.panImg = await getBase64('mPanImg');
+
+  if (document.getElementById('mRationImg').files[0])
+    m.docs.rationImg = await getBase64('mRationImg');
+
+  if (document.getElementById('mCustomerPhoto').files[0])
+    m.photos.customer = await getBase64('mCustomerPhoto');
+
+  if (document.getElementById('mSignature').files[0])
+    m.photos.signature = await getBase64('mSignature');
+
+  saveData();
+  alert("✅ Member Updated Successfully");
+
+  // Reset edit mode
+  document.getElementById('formAddMember').reset();
+  document.getElementById('editMemberId').value = '';
+  document.getElementById('btnSaveMember').textContent = "Save New Member";
+  
+  // 🔒 New Member mode: documents required again
+document.querySelectorAll('#formAddMember input[type="file"]').forEach(f => {
+  f.setAttribute('required', 'true');
+});
+
+  showSection('sectionMembersList');
+  return; // 🔴 VERY IMPORTANT
+}
+    
+    const isDep = document.getElementById('chkDeposit').checked;
+    const isLoan = document.getElementById('chkLoan').checked;
+
+    if(!isDep && !isLoan) {
+      alert("Please select at least one Account Type (Deposit or Loan).");
+      return;
+    }
+
+    // Collect Data
+    const id = generateID();
+    const newMember = {
+      id: id,
+      name: document.getElementById('mName').value,
+      mobile: document.getElementById('mMobile').value,
+      address: document.getElementById('mAddress').value,
+      bank: {
+        name: document.getElementById('mBankName').value,
+        acc: document.getElementById('mAccountNo').value,
+        ifsc: document.getElementById('mIFSC').value,
+        img: await getBase64('mBankImg')
+      },
+      docs: {
+        aadhaar: document.getElementById('mAadhaarNo').value,
+        aadhaarFront: await getBase64('mAadhaarFront'),
+        aadhaarBack: await getBase64('mAadhaarBack'),
+        pan: document.getElementById('mPanNo').value,
+        panImg: await getBase64('mPanImg'),
+        ration: document.getElementById('mRationNo').value,
+        rationImg: await getBase64('mRationImg')
+      },
+      photos: {
+        customer: await getBase64('mCustomerPhoto'),
+        signature: await getBase64('mSignature')
+      },
+      accountTypes: [],
+      savingsBalance: 0,
+      loanBalance: 0,
+      repaidAmount: 0,
+      isActive: true,
+      joinedDate: new Date().toISOString()
+    };
+
+    if(isDep) newMember.accountTypes.push('Deposit');
+    if(isLoan) {
+      newMember.accountTypes.push('Loan');
+      const initAmt = Number(document.getElementById('mInitLoanAmt').value || 0);
+      if(initAmt > 0) {
+        newMember.loanBalance = initAmt;
+        logActivity('LOAN_GIVEN', `Initial Loan to ${newMember.name} (${id})`, initAmt);
+      }
+    }
+
+    appState.members.push(newMember);
+    logActivity('MEMBER_ADD', `New Member Added: ${newMember.name} (${id})`);
+    
+    alert(`Member Saved Successfully!\nID: ${id}`);
+    e.target.reset();
+    document.getElementById('initialLoanFields').classList.add('section-hidden');
+    saveData();
+  });
+
+  // 2. APPLY LOAN
+  function filterMembers(inputId, selectId) {
+    const term = document.getElementById(inputId).value.toLowerCase();
+    populateSelect(selectId, term);
+  }
+
+  function populateSelect(selectId, filter = '') {
+  const sel = document.getElementById(selectId);
+
+  // ✅ Default option hamesha rahe
+  sel.innerHTML = '<option value="">Select Member...</option>';
+
+  if (!appState.members || appState.members.length === 0) {
+    return;
+  }
+
+  appState.members.forEach(m => {
+    if (!m.isActive) return;
+
+    const text = `${m.name} (${m.id})`;
+    if (text.toLowerCase().includes(filter.toLowerCase())) {
+      const opt = document.createElement('option');
+      opt.value = m.id;
+      opt.textContent = text;
+      sel.appendChild(opt);
+    }
+  });
+}
+
+  document.getElementById('formApplyLoan').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const memId = document.getElementById('selLoanMember').value;
+    if(!memId) return alert("Select a member");
+
+    const amt = Number(document.getElementById('loanAmt').value);
+    const reason = document.getElementById('loanReason').value;
+    const due = document.getElementById('loanDate').value;
+    const sig = await getBase64('loanSig');
+
+    const member = appState.members.find(m => m.id === memId);
+    if(member) {
+      member.loanBalance = (member.loanBalance || 0) + amt;
+      // Mark as loan taker if not already
+      if(!member.accountTypes.includes('Loan')) member.accountTypes.push('Loan');
+      
+      logActivity('LOAN_APPLY', `Loan applied by ${member.name}. Reason: ${reason}. Due: ${due}`, amt);
+      alert("Loan Applied Successfully");
+      e.target.reset();
+      saveData();
+    }
+  });
+
+  // 3. ADD DEPOSIT
+  function toggleDepType() {
+    const isRepay = document.querySelector('input[name="depType"]:checked').value === 'repay';
+    const note = document.getElementById('repayNote');
+    if(isRepay) note.classList.remove('section-hidden');
+    else note.classList.add('section-hidden');
+  }
+  
+  function toggleOnlineProof() {
+    const method = document.getElementById('depMethod').value;
+    const div = document.getElementById('onlineProofDiv');
+    const inp = document.getElementById('depReceipt');
+    if(method === 'Online') {
+       div.classList.remove('section-hidden');
+       inp.setAttribute('required', 'true');
+    } else {
+       div.classList.add('section-hidden');
+       inp.removeAttribute('required');
+    }
+  }
+
+  document.getElementById('formAddDeposit').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const memId = document.getElementById('selDepMember').value;
+    if(!memId) return alert("Select a member");
+
+    const amt = Number(document.getElementById('depAmount').value);
+    const type = document.querySelector('input[name="depType"]:checked').value;
+    const method = document.getElementById('depMethod').value;
+    
+    const member = appState.members.find(m => m.id === memId);
+    
+    if(member) {
+       if(type === 'repay') {
+          // PROMPT RULE: Deduct from Loan, Add to Total Deposited Amount
+          // We handle this by adding to a 'repaidAmount' tracker
+          member.loanBalance = Math.max(0, (member.loanBalance || 0) - amt);
+          member.repaidAmount = (member.repaidAmount || 0) + amt;
+          logActivity('LOAN_REPAY', `Repayment by ${member.name} via ${method}`, amt);
+       } else {
+          // Normal Saving
+          member.savingsBalance = (member.savingsBalance || 0) + amt;
+          if(!member.accountTypes.includes('Deposit')) member.accountTypes.push('Deposit');
+          logActivity('DEPOSIT_ADD', `Saving Deposit by ${member.name} via ${method}`, amt);
+       }
+       alert("Transaction Saved Successfully");
+       e.target.reset();
+       document.getElementById('repayNote').classList.add('section-hidden');
+       document.getElementById('onlineProofDiv').classList.add('section-hidden');
+       saveData();
+    }
+  });
+
+  // 4. MEMBERS LIST
+  function renderMembersTable() {
+    const tbody = document.getElementById('tableMembersBody');
+    const search = document.getElementById('listSearch').value.toLowerCase();
+    tbody.innerHTML = '';
+
+    appState.members.forEach(m => {
+      const txt = (m.name + m.id).toLowerCase();
+      if(!txt.includes(search)) return;
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${m.id}</td>
+        <td><strong>${m.name}</strong></td>
+        <td>${m.mobile}</td>
+        <td><span class="status-pill ${m.isActive ? 'status-active':'status-inactive'}">${m.isActive ? 'Active ✅':'Closed ❌'}</span></td>
+        <td>${formatCurrency(m.savingsBalance || 0)}</td>
+        <td style="color:${m.loanBalance > 0 ? '#d32f2f':'#222'}">${formatCurrency(m.loanBalance || 0)}</td>
+        <td class="actions">
+  <div class="action-box">
+
+    <button class="btn-action btn-show"
+      onclick="viewMember('${m.id}')">
+      👁 SHOW
+    </button>
+
+    <button class="btn-action btn-edit"
+      onclick="editMember('${m.id}')">
+      ✏️ EDIT
+    </button>
+
+    <button class="btn-action btn-toggle ${m.isActive ? 'deactivate' : 'activate'}"
+      onclick="toggleMemberStatus('${m.id}')">
+      ${m.isActive ? 'Deactivate' : 'Activate'}
+    </button>
+
+  </div>
+</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function toggleMemberStatus(id) {
+    const m = appState.members.find(x => x.id === id);
+    if(m) {
+      m.isActive = !m.isActive;
+      logActivity('MEMBER_STATUS', `Status changed to ${m.isActive?'Active':'Inactive'} for ${m.name}`);
+      saveData();
+      renderMembersTable();
+    }
+  }
+
+  // 5. ACTIVITY TABLE
+  function renderActivityTable() {
+    const tbody = document.getElementById('tableActivityBody');
+    tbody.innerHTML = '';
+    appState.activities.forEach(a => {
+       const tr = document.createElement('tr');
+       tr.innerHTML = `
+         <td>${a.date}</td>
+         <td><span class="status-pill status-active">${a.type}</span></td>
+         <td>${a.details}</td>
+         <td>${a.amount}</td>
+       `;
+       tbody.appendChild(tr);
+    });
+  }
+
+  // --- BACKUP & RESTORE ---
+  
+
+ function exportBackup() {
+  try {
+    const json = JSON.stringify(appState, null, 2);
+    const fileName = "dvs_backup_" + Date.now() + ".json";
+
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    URL.revokeObjectURL(url);
+
+    logActivity("BACKUP", "Manual Backup Created");
+    alert("✅ Backup downloaded successfully.\nCheck Downloads folder.");
+
+  } catch (e) {
+    alert("❌ Backup failed");
+    console.error(e);
+  }
+}
+
+function autoBackupSnapshot() {
+  const snapKey = "DVS_AUTO_BACKUP";
+  const payload = {
+    time: new Date().toISOString(),
+    data: appState
+  };
+  localStorage.setItem(snapKey, JSON.stringify(payload));
+}
+function updateAutoBackupInfo() {
+  const raw = localStorage.getItem("DVS_AUTO_BACKUP");
+  if (!raw) return;
+  const snap = JSON.parse(raw);
+  const el = document.getElementById("autoBackupInfo");
+  if (el) {
+    el.textContent =
+      "Last Auto Backup: " + new Date(snap.time).toLocaleString();
+  }
+}
+function restoreAutoBackup() {
+  if (!confirm("This will replace current data with last auto backup. Continue?")) {
+    return;
+  }
+
+  const raw = localStorage.getItem("DVS_AUTO_BACKUP");
+  if (!raw) {
+    alert("❌ No auto backup found");
+    return;
+  }
+  try {
+    const snap = JSON.parse(raw);
+    appState = snap.data;
+    saveData();
+    alert("✅ Auto Backup Restored Successfully");
+    location.reload();
+  } catch (e) {
+    alert("❌ Auto backup corrupted");
+  }
+}
+
+
+
+  function importBackup(input) {
+    if(!input.files[0]) return;
+   
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const data = JSON.parse(e.target.result);
+        if(data && data.members) {
+           appState = data;
+           localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+updateDashboard();
+           logActivity('RESTORE', 'System Restored from Backup File');
+           alert("✅ Data Restored Successfully!");
+           location.reload();
+        } else {
+           alert("❌ Invalid Backup File");
+        }
+      } catch(err) {
+        alert("❌ Error reading file");
+      }
+    };
+    reader.readAsText(input.files[0]);
+  }
+  function viewMember(memberId) {
+  const m = appState.members.find(x => x.id === memberId);
+  if (!m) return alert("Member not found");
+
+  const win = window.open("", "_blank");
+  win.document.write(`
+    <h2>${m.name} (${m.id})</h2>
+    <p><b>Mobile:</b> ${m.mobile}</p>
+    <p><b>Address:</b> ${m.address}</p>
+    <p><b>Status:</b> ${m.isActive ? 'Active' : 'Inactive'}</p>
+
+    <h3>💰 Account</h3>
+    <p>Savings Balance: ₹${m.savingsBalance || 0}</p>
+    <p>Loan Balance: ₹${m.loanBalance || 0}</p>
+
+    <h3>🏦 Bank Details</h3>
+    <p>Bank: ${m.bank.name}</p>
+    <p>Account: ${m.bank.acc}</p>
+    <p>IFSC: ${m.bank.ifsc}</p>
+    <img src="${m.bank.img}" width="200">
+
+    <h3>🆔 Documents</h3>
+    <p>Aadhaar: ${m.docs.aadhaar}</p>
+    <img src="${m.docs.aadhaarFront}" width="150">
+    <img src="${m.docs.aadhaarBack}" width="150">
+
+    <p>PAN: ${m.docs.pan}</p>
+    <img src="${m.docs.panImg}" width="150">
+
+    <p>Ration: ${m.docs.ration || '-'}</p>
+    ${m.docs.rationImg ? `<img src="${m.docs.rationImg}" width="150">` : ''}
+
+    <h3>📸 Customer</h3>
+    <img src="${m.photos.customer}" width="150">
+    <img src="${m.photos.signature}" width="150">
+  `);
+}
+
+function editMember(memberId) {
+  const m = appState.members.find(x => x.id === memberId);
+  if (!m) return alert("Member not found");
+
+  document.getElementById('mName').value = m.name;
+  document.getElementById('mMobile').value = m.mobile;
+  document.getElementById('mAddress').value = m.address;
+
+  document.getElementById('mBankName').value = m.bank.name;
+  document.getElementById('mAccountNo').value = m.bank.acc;
+  document.getElementById('mIFSC').value = m.bank.ifsc;
+
+  document.getElementById('mAadhaarNo').value = m.docs.aadhaar;
+  document.getElementById('mPanNo').value = m.docs.pan;
+  document.getElementById('mRationNo').value = m.docs.ration || '';
+
+  document.getElementById('editMemberId').value = m.id;
+  document.getElementById('btnSaveMember').textContent = "Update Member";
+
+  showSection('sectionAddMember');
+
+// 🔓 Edit mode: document images optional
+document.querySelectorAll('#formAddMember input[type="file"]').forEach(f => {
+  f.removeAttribute('required');
+});
+}
+
+
+</script>
+</body>
+</html>
