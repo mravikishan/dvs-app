@@ -751,7 +751,16 @@ if ('serviceWorker' in navigator) {
 </div>
 
 <!-- 🔒 Hidden SAVING Deposit PDF Receipt -->
-<div id="depositReceiptTemplate" style="display:none; font-family: Arial; padding:20px;">
+<div id="depositReceiptTemplate"
+     style="
+       position: fixed;
+       left: -10000px;
+       top: 0;
+       width: 210mm;
+       background: white;
+       font-family: Arial;
+       padding: 20px;
+     ">
   <h2 style="text-align:center;">Dhan Varsha Bachat Samuh</h2>
   <p style="text-align:center;">Saving Deposit Receipt</p>
   <hr>
@@ -1594,16 +1603,22 @@ function generateDepositReceipt(data) {
 
   const element = document.getElementById('depositReceiptTemplate');
 
-  html2pdf()
-    .from(element)
-    .set({
-      margin: 10,
-      filename: `Saving_Deposit_${data.memberId}_${Date.now()}.pdf`,
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    })
-    .save();
+  // 🔍 DEBUG LINE (YAHI ADD KARO)
+  console.log(element.innerHTML);
+
+  setTimeout(() => {
+    html2pdf()
+      .from(element)
+      .set({
+        margin: 10,
+        filename: `Saving_Deposit_${data.memberId}_${Date.now()}.pdf`,
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      })
+      .save();
+  }, 300);
 }
+
 
 
 </script>
