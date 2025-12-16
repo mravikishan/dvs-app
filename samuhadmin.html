@@ -349,6 +349,11 @@
   color: #0b3d91;
 }
 
+.btn-details {
+  background-color: #607d8b;
+  color: #fff;
+}
+
 /* ACTIVATE */
 .btn-toggle.activate {
   background: #e6f9ed;
@@ -364,6 +369,7 @@
 
   </style>
 </head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
@@ -633,6 +639,14 @@ if ('serviceWorker' in navigator) {
         </div>
         <small id="repayNote" class="section-hidden" style="color:#d32f2f; margin-top:5px;">⚠️ Note: This will deduct from Loan Balance and Add to Total Deposit stats.</small>
       </div>
+      
+      <!-- 🔽 Select Loan (Only for Repayment) -->
+<div id="loanSelectDiv" class="section-hidden">
+  <label>🔍 Select Loan (Required)</label>
+  <select id="selRepayLoan" required>
+    <option value="">Select Loan...</option>
+  </select>
+</div>
 
       <div>
         <label>Amount (₹) *</label>
@@ -697,12 +711,66 @@ if ('serviceWorker' in navigator) {
       </table>
     </div>
   </section>
+  <section id="sectionLoanHistory" class="card section-hidden">
+  <h2>📑 Loan History</h2>
+
+  <div id="loanHistoryContainer"></div>
+
+  <button class="btn btn-secondary" onclick="showSection('sectionMembersList')">
+    ⬅ Back
+  </button>
+</section>
 
   <footer>
     <p>© Dhan-Varsha Bachat Samuh</p>
     <p>📧 Official Support Email: <a href="mailto:dvs.helpdesk.official@gmail.com">dvs.helpdesk.official@gmail.com</a></p>
   </footer>
 </main>
+
+<!-- 🔒 Hidden PDF Receipt Template -->
+<div id="receiptTemplate" style="display:none; font-family: Arial; padding:20px;">
+  <h2 style="text-align:center;">Dhan Varsha Bachat Samuh</h2>
+  <p style="text-align:center;">Loan Repayment Receipt</p>
+  <hr>
+
+  <p><b>Member Name:</b> <span id="rMemberName"></span></p>
+  <p><b>Member ID:</b> <span id="rMemberId"></span></p>
+  <p><b>Loan ID:</b> <span id="rLoanId"></span></p>
+
+  <hr>
+
+  <p><b>Paid Amount:</b> ₹<span id="rAmount"></span></p>
+  <p><b>Payment Method:</b> <span id="rMethod"></span></p>
+  <p><b>Date & Time:</b> <span id="rDate"></span></p>
+  <p><b>Remaining Balance:</b> ₹<span id="rRemaining"></span></p>
+
+  <hr>
+  <p style="font-size:12px; text-align:center;">
+    This is a computer generated receipt.
+  </p>
+</div>
+
+<!-- 🔒 Hidden SAVING Deposit PDF Receipt -->
+<div id="depositReceiptTemplate" style="display:none; font-family: Arial; padding:20px;">
+  <h2 style="text-align:center;">Dhan Varsha Bachat Samuh</h2>
+  <p style="text-align:center;">Saving Deposit Receipt</p>
+  <hr>
+
+  <p><b>Member Name:</b> <span id="dMemberName"></span></p>
+  <p><b>Member ID:</b> <span id="dMemberId"></span></p>
+
+  <hr>
+
+  <p><b>Deposit Amount:</b> ₹<span id="dAmount"></span></p>
+  <p><b>Payment Method:</b> <span id="dMethod"></span></p>
+  <p><b>Date & Time:</b> <span id="dDate"></span></p>
+  <p><b>Total Savings Balance:</b> ₹<span id="dBalance"></span></p>
+
+  <hr>
+  <p style="font-size:12px; text-align:center;">
+    This is a computer generated receipt.
+  </p>
+</div>
 
 <script>
   // --- STATE & CONSTANTS ---
@@ -950,6 +1018,7 @@ document.querySelectorAll('#formAddMember input[type="file"]').forEach(f => {
       savingsBalance: 0,
       loanBalance: 0,
       repaidAmount: 0,
+      loans: [],
       isActive: true,
       joinedDate: new Date().toISOString()
     };
@@ -1013,25 +1082,86 @@ document.querySelectorAll('#formAddMember input[type="file"]').forEach(f => {
     const sig = await getBase64('loanSig');
 
     const member = appState.members.find(m => m.id === memId);
-    if(member) {
-      member.loanBalance = (member.loanBalance || 0) + amt;
-      // Mark as loan taker if not already
-      if(!member.accountTypes.includes('Loan')) member.accountTypes.push('Loan');
-      
-      logActivity('LOAN_APPLY', `Loan applied by ${member.name}. Reason: ${reason}. Due: ${due}`, amt);
-      alert("Loan Applied Successfully");
-      e.target.reset();
-      saveData();
-    }
+    if (member) {
+
+  // 🔑 1. UNIQUE LOAN ID
+  const loanId = "LN-" + Date.now();
+
+  // 🔑 2. LOAN OBJECT
+  const loanObj = {
+    loanId: loanId,
+    amount: amt,
+    remaining: amt,
+    date: new Date().toISOString(),
+    reason: reason,
+    dueDate: due,
+    status: "ACTIVE"
+  };
+
+  // 🔑 3. PUSH INTO MEMBER LOANS
+  member.loans.push(loanObj);
+
+  // 🔑 4. UPDATE TOTAL BALANCE (for dashboard)
+  member.loanBalance = (member.loanBalance || 0) + amt;
+
+  if (!member.accountTypes.includes('Loan'))
+    member.accountTypes.push('Loan');
+
+  logActivity(
+    'LOAN_APPLY',
+    `Loan ${loanId} given to ${member.name}`,
+    amt
+  );
+
+  alert("Loan Applied Successfully");
+  e.target.reset();
+  saveData();
+}
   });
 
   // 3. ADD DEPOSIT
   function toggleDepType() {
-    const isRepay = document.querySelector('input[name="depType"]:checked').value === 'repay';
-    const note = document.getElementById('repayNote');
-    if(isRepay) note.classList.remove('section-hidden');
-    else note.classList.add('section-hidden');
+  const isRepay =
+    document.querySelector('input[name="depType"]:checked').value === 'repay';
+
+  const note = document.getElementById('repayNote');
+  const loanDiv = document.getElementById('loanSelectDiv');
+  const loanSel = document.getElementById('selRepayLoan');
+
+  if (isRepay) {
+    note.classList.remove('section-hidden');
+    loanDiv.classList.remove('section-hidden');
+    loanSel.setAttribute('required', 'true');
+    populateLoanSelect();   // 🔑 IMPORTANT
+  } else {
+    note.classList.add('section-hidden');
+    loanDiv.classList.add('section-hidden');
+    loanSel.removeAttribute('required');
+    loanSel.innerHTML = '<option value="">Select Loan...</option>';
   }
+}
+
+function populateLoanSelect() {
+  const memId = document.getElementById('selDepMember').value;
+  const sel = document.getElementById('selRepayLoan');
+
+  sel.innerHTML = '<option value="">Select Loan...</option>';
+
+  if (!memId) return;
+
+  const member = appState.members.find(m => m.id === memId);
+  if (!member || !member.loans) return;
+
+  member.loans.forEach(loan => {
+    if (loan.remaining > 0) {
+      const opt = document.createElement('option');
+      opt.value = loan.loanId;
+      opt.textContent =
+        `${loan.loanId} | Remaining ₹${loan.remaining}`;
+      sel.appendChild(opt);
+    }
+  });
+}
   
   function toggleOnlineProof() {
     const method = document.getElementById('depMethod').value;
@@ -1061,15 +1191,80 @@ document.querySelectorAll('#formAddMember input[type="file"]').forEach(f => {
        if(type === 'repay') {
           // PROMPT RULE: Deduct from Loan, Add to Total Deposited Amount
           // We handle this by adding to a 'repaidAmount' tracker
-          member.loanBalance = Math.max(0, (member.loanBalance || 0) - amt);
-          member.repaidAmount = (member.repaidAmount || 0) + amt;
-          logActivity('LOAN_REPAY', `Repayment by ${member.name} via ${method}`, amt);
+          if (type === 'repay') {
+
+  const loanId = document.getElementById('selRepayLoan').value;
+  if (!loanId) {
+    alert("Please select which loan you are repaying");
+    return;
+  }
+
+  const loan = member.loans.find(l => l.loanId === loanId);
+  if (!loan) {
+    alert("Loan not found");
+    return;
+  }
+
+  if (amt > loan.remaining) {
+    alert("Amount is greater than remaining loan");
+    return;
+  }
+
+  // 🔻 Deduct from selected loan
+  loan.remaining -= amt;
+
+  // 🔻 Update overall loan balance
+  member.loanBalance -= amt;
+  
+  generateLoanReceipt({
+  memberName: member.name,
+  memberId: member.id,
+  loanId: loan.loanId,
+  amount: amt,
+  method: method,
+  date: new Date().toLocaleString('en-IN'),
+  remaining: loan.remaining
+});
+  
+  // ✅ repayment history array ensure
+if (!loan.repayments) loan.repayments = [];
+
+// ✅ save this repayment
+loan.repayments.push({
+  date: new Date().toLocaleString('en-IN'),
+  amount: amt,
+  method: method
+});
+
+  // 🔻 Close loan if fully paid
+  if (loan.remaining === 0) {
+    loan.status = "CLOSED";
+  }
+
+  // 🔻 Track repayment
+  member.repaidAmount = (member.repaidAmount || 0) + amt;
+
+  logActivity(
+    'LOAN_REPAY',
+    `Repayment for ${loan.loanId} by ${member.name}`,
+    amt
+  );
+}
+
        } else {
           // Normal Saving
           member.savingsBalance = (member.savingsBalance || 0) + amt;
           if(!member.accountTypes.includes('Deposit')) member.accountTypes.push('Deposit');
           logActivity('DEPOSIT_ADD', `Saving Deposit by ${member.name} via ${method}`, amt);
        }
+       generateDepositReceipt({
+  memberName: member.name,
+  memberId: member.id,
+  amount: amt,
+  method: method,
+  date: new Date().toLocaleString('en-IN'),
+  balance: member.savingsBalance
+});
        alert("Transaction Saved Successfully");
        e.target.reset();
        document.getElementById('repayNote').classList.add('section-hidden');
@@ -1100,14 +1295,21 @@ document.querySelectorAll('#formAddMember input[type="file"]').forEach(f => {
   <div class="action-box">
 
     <button class="btn-action btn-show"
-      onclick="viewMember('${m.id}')">
-      👁 SHOW
-    </button>
+  onclick="showLoanHistory('${m.id}')">
+  👁 SHOW
+</button>
+
 
     <button class="btn-action btn-edit"
       onclick="editMember('${m.id}')">
       ✏️ EDIT
     </button>
+    
+    <button class="btn-action btn-details"
+  onclick="viewMember('${m.id}')">
+  DETAILS
+</button>
+    
 
     <button class="btn-action btn-toggle ${m.isActive ? 'deactivate' : 'activate'}"
       onclick="toggleMemberStatus('${m.id}')">
@@ -1280,6 +1482,7 @@ updateDashboard();
   `);
 }
 
+
 function editMember(memberId) {
   const m = appState.members.find(x => x.id === memberId);
   if (!m) return alert("Member not found");
@@ -1305,6 +1508,101 @@ function editMember(memberId) {
 document.querySelectorAll('#formAddMember input[type="file"]').forEach(f => {
   f.removeAttribute('required');
 });
+}
+function showLoanHistory(memberId) {
+  const container = document.getElementById("loanHistoryContainer");
+  container.innerHTML = "";
+
+  const member = appState.members.find(m => m.id === memberId);
+  if (!member || !member.loans || member.loans.length === 0) {
+    container.innerHTML = "<p>No loans found.</p>";
+    showSection("sectionLoanHistory");
+    return;
+  }
+
+  member.loans.forEach(loan => {
+    let html = `
+      <div style="border:1px solid #ccc; padding:10px; margin-bottom:12px;">
+        <h3>Loan ID: ${loan.loanId}</h3>
+        <p>Total Loan: ₹${loan.amount}</p>
+        <p>Remaining: ₹${loan.remaining}</p>
+        <p>Status: ${loan.status}</p>
+        <p>Given On: ${new Date(loan.date).toLocaleDateString()}</p>
+    `;
+
+    if (loan.repayments && loan.repayments.length > 0) {
+      html += `
+        <table style="width:100%; border-collapse:collapse; margin-top:8px;">
+          <tr>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Method</th>
+          </tr>
+      `;
+      loan.repayments.forEach(r => {
+        html += `
+          <tr>
+            <td>${r.date}</td>
+            <td>₹${r.amount}</td>
+            <td>${r.method}</td>
+          </tr>
+        `;
+      });
+      html += `</table>`;
+    } else {
+      html += `<p><i>No repayments yet</i></p>`;
+    }
+
+    html += `</div>`;
+    container.innerHTML += html;
+  });
+
+  showSection("sectionLoanHistory");
+}
+
+function generateLoanReceipt(data) {
+
+  document.getElementById('rMemberName').innerText = data.memberName;
+  document.getElementById('rMemberId').innerText = data.memberId;
+  document.getElementById('rLoanId').innerText = data.loanId;
+  document.getElementById('rAmount').innerText = data.amount;
+  document.getElementById('rMethod').innerText = data.method;
+  document.getElementById('rDate').innerText = data.date;
+  document.getElementById('rRemaining').innerText = data.remaining;
+
+  const element = document.getElementById('receiptTemplate');
+
+  html2pdf()
+    .from(element)
+    .set({
+      margin: 10,
+      filename: `Loan_Receipt_${data.loanId}.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    })
+    .save();
+}
+
+function generateDepositReceipt(data) {
+
+  document.getElementById('dMemberName').innerText = data.memberName;
+  document.getElementById('dMemberId').innerText = data.memberId;
+  document.getElementById('dAmount').innerText = data.amount;
+  document.getElementById('dMethod').innerText = data.method;
+  document.getElementById('dDate').innerText = data.date;
+  document.getElementById('dBalance').innerText = data.balance;
+
+  const element = document.getElementById('depositReceiptTemplate');
+
+  html2pdf()
+    .from(element)
+    .set({
+      margin: 10,
+      filename: `Saving_Deposit_${data.memberId}_${Date.now()}.pdf`,
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    })
+    .save();
 }
 
 
